@@ -12,10 +12,11 @@ export const listPositionsFn = createServerFn({ method: 'GET' }).handler(
 )
 
 const getPositionInputSchema = z.object({ id: positionIdSchema })
+type GetPositionInput = z.infer<typeof getPositionInputSchema>
 
 export const getPositionFn = createServerFn({ method: 'GET' })
   .inputValidator(getPositionInputSchema)
-  .handler(async ({ data }) => {
+  .handler(async ({ data }: { data: GetPositionInput }) => {
     const position = await getPositionById(data.id)
     if (!position) throw new Error('POSITION_NOT_FOUND')
     return position
