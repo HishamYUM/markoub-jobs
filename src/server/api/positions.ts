@@ -1,0 +1,22 @@
+import { createServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
+
+import { getPositionById, listActivePositions } from '../repos/positions.repo'
+
+const positionIdSchema = z.string().uuid()
+
+export const listPositionsFn = createServerFn({ method: 'GET' }).handler(
+  async (): Promise<Awaited<ReturnType<typeof listActivePositions>>> => {
+    return listActivePositions()
+  },
+)
+
+const getPositionInputSchema = z.object({ id: positionIdSchema })
+
+export const getPositionFn = createServerFn({ method: 'GET' })
+  .inputValidator(getPositionInputSchema)
+  .handler(async ({ data }) => {
+    const position = await getPositionById(data.id)
+    if (!position) throw new Error('POSITION_NOT_FOUND')
+    return position
+  })
