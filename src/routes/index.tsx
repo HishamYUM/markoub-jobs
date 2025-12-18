@@ -78,7 +78,11 @@ function OpenPositionsPage() {
               <div className="flex items-center gap-16">
                 <div className="text-lg text-neutral-800">Hybrid</div>
                 <div className="text-lg text-neutral-800">Rabat, Morocco</div>
-                <Link to="/positions/$id" params={{ id: p.id }}>
+                <Link
+                  to="/positions/$id"
+                  params={{ id: p.id }}
+                  hash="application"
+                >
                   <Button variant="outline" className="h-10 rounded-xl px-7">
                     Apply
                   </Button>
