@@ -66,8 +66,8 @@ function OpenPositionsPage() {
             >
               <div className="space-y-1">
                 <Link
-                  to="/"
-                  // params={{ id: p.id }}
+                  to="/positions/$id"
+                  params={{ id: p.id }}
                   className="text-2xl font-semibold text-neutral-900 hover:underline"
                 >
                   {p.title}
@@ -78,7 +78,7 @@ function OpenPositionsPage() {
               <div className="flex items-center gap-16">
                 <div className="text-lg text-neutral-800">Hybrid</div>
                 <div className="text-lg text-neutral-800">Rabat, Morocco</div>
-                <Link to="/" params={{ id: p.id }}>
+                <Link to="/positions/$id" params={{ id: p.id }}>
                   <Button variant="outline" className="h-10 rounded-xl px-7">
                     Apply
                   </Button>
