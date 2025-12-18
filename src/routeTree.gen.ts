@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ApplicationSuccessRouteImport } from './routes/application-success'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PositionsIdRouteImport } from './routes/positions/$id'
 
+const ApplicationSuccessRoute = ApplicationSuccessRouteImport.update({
+  id: '/application-success',
+  path: '/application-success',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +31,43 @@ const PositionsIdRoute = PositionsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/positions/$id'
+  fullPaths: '/' | '/application-success' | '/positions/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/positions/$id'
-  id: '__root__' | '/' | '/positions/$id'
+  to: '/' | '/application-success' | '/positions/$id'
+  id: '__root__' | '/' | '/application-success' | '/positions/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApplicationSuccessRoute: typeof ApplicationSuccessRoute
   PositionsIdRoute: typeof PositionsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/application-success': {
+      id: '/application-success'
+      path: '/application-success'
+      fullPath: '/application-success'
+      preLoaderRoute: typeof ApplicationSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApplicationSuccessRoute: ApplicationSuccessRoute,
   PositionsIdRoute: PositionsIdRoute,
 }
 export const routeTree = rootRouteImport
