@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { toast } from 'sonner'
 import { getPositionFn } from '../../server/api/positions'
 
 import { Button } from '../../components/ui/button'
 import { Card } from '../../components/ui/card'
 import { Separator } from '../../components/ui/separator'
+import { getErrorCode, toUserMessage } from '../../lib/appErrors'
 
 import { positionContent } from '../../components/positions/PositionContent'
 import { ApplicationForm } from '../../components/positions/ApplicationForm'
@@ -18,15 +20,17 @@ export const Route = createFileRoute('/positions/$id')({
 function PositionDetailPage() {
   const position = Route.useLoaderData()
   const [submitting, setSubmitting] = React.useState(false)
-
+  const navigate = Route.useNavigate()
+  
   async function onSubmit(fd: FormData) {
     setSubmitting(true)
     try {
       await submitApplicationFn({ data: fd })
-      alert('Application sent successfully')
+      toast.success('Application sent successfully')
+      navigate({ to: '/application-success' })
     } catch (err) {
-      console.error(err)
-      alert('Failed to submit application')
+      const code = getErrorCode(err)
+      toast.error(toUserMessage(code))
     } finally {
       setSubmitting(false)
     }
@@ -53,14 +57,18 @@ function PositionDetailPage() {
                 <div className="text-2xl font-semibold text-neutral-900">
                   {position.title}
                 </div>
-                <div className="text-sm text-neutral-600">Hybrid · Rabat, Morocco</div>
+                <div className="text-sm text-neutral-600">
+                  Hybrid · Rabat, Morocco
+                </div>
               </div>
 
               <div className="mt-5">
                 <Button
                   className="h-10 rounded-xl bg-orange-600 px-6 text-white hover:bg-orange-700"
                   onClick={() =>
-                    document.getElementById('application')?.scrollIntoView({ behavior: 'smooth' })
+                    document
+                      .getElementById('application')
+                      ?.scrollIntoView({ behavior: 'smooth' })
                   }
                 >
                   Apply
@@ -72,7 +80,9 @@ function PositionDetailPage() {
           {/* Right content */}
           <div className="col-span-12 md:col-span-8">
             <Section title="What We do">
-              <p className="leading-7 text-neutral-700">{positionContent.whatWeDo}</p>
+              <p className="leading-7 text-neutral-700">
+                {positionContent.whatWeDo}
+              </p>
             </Section>
 
             <Section title="Your Mission">
@@ -107,7 +117,13 @@ function PositionDetailPage() {
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) {
   return (
     <section className="mb-8">
       <h2 className="mb-3 text-lg font-semibold text-neutral-900">{title}</h2>
