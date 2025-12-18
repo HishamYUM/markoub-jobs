@@ -7,6 +7,7 @@ import { Card } from '../../components/ui/card'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
 import { Separator } from '../../components/ui/separator'
+import { submitApplicationFn } from '@/server/api/applications'
 
 export const Route = createFileRoute('/positions/$id')({
   loader: async ({ params }) => getPositionFn({ data: { id: params.id } }),
@@ -15,6 +16,30 @@ export const Route = createFileRoute('/positions/$id')({
 
 function PositionDetailPage() {
   const position = Route.useLoaderData()
+
+  const [submitting, setSubmitting] = React.useState(false)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setSubmitting(true)
+
+    try {
+      const form = e.currentTarget
+      const fd = new FormData(form)
+
+      // Ensure job-specific application
+      fd.set('positionId', position.id)
+
+      await submitApplicationFn({ data: fd })
+      form.reset()
+      alert('Application sent successfully')
+    } catch (err) {
+      console.error(err)
+      alert('Failed to submit application')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   // Static content to match screenshot sections (requirements don't provide these fields)
   const whatWeDo =
@@ -87,7 +112,14 @@ function PositionDetailPage() {
               </div>
 
               <div className="mt-5">
-                <Button className="h-10 rounded-xl bg-orange-600 px-6 text-white hover:bg-orange-700">
+                <Button
+                  className="h-10 rounded-xl bg-orange-600 px-6 text-white hover:bg-orange-700"
+                  onClick={() => {
+                    document
+                      .getElementById('application')
+                      ?.scrollIntoView({ behavior: 'smooth' })
+                  }}
+                >
                   Apply
                 </Button>
               </div>
@@ -119,59 +151,70 @@ function PositionDetailPage() {
             <Separator className="my-8" />
 
             {/* Application card */}
-            <Card className="rounded-2xl border border-neutral-200 p-8 shadow-sm">
-              <div className="text-lg font-semibold text-neutral-900">
-                Application
+
+            <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+              <div id="application">
+                <Card className="rounded-2xl border border-neutral-200 p-8 shadow-sm">
+                  <div className="text-lg font-semibold text-neutral-900">
+                    Application
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label className="text-sm text-neutral-800">
+                        Full name *
+                      </Label>
+                      <Input
+                        name="fullName"
+                        className="h-11 rounded-xl"
+                        placeholder="Yassine Alaoui"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm text-neutral-800">
+                        Email address *
+                      </Label>
+                      <Input
+                        name="email"
+                        type="email"
+                        required
+                        className="h-11 rounded-xl"
+                        placeholder="example@mail.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-6 space-y-2">
+                    <Label className="text-sm text-neutral-800">Resume *</Label>
+
+                    {/* UI-only placeholder; real upload comes later */}
+
+                    <Input
+                      name="resume"
+                      type="file"
+                      accept="application/pdf"
+                      required
+                      className="h-11 rounded-xl"
+                    />
+
+                    <div className="text-xs text-neutral-500">
+                      PDF Only, 2 MB Max
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex justify-end">
+                    <Button
+                      type="submit"
+                      disabled={submitting}
+                      className="rounded-xl bg-orange-600 px-8 text-white"
+                    >
+                      {submitting ? 'Submitting…' : 'Submit application'}
+                    </Button>
+                  </div>
+                </Card>
               </div>
-
-              <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label className="text-sm text-neutral-800">
-                    Full name *
-                  </Label>
-                  <Input
-                    className="h-11 rounded-xl"
-                    placeholder="Yassine Alaoui"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm text-neutral-800">
-                    Email address *
-                  </Label>
-                  <Input
-                    className="h-11 rounded-xl"
-                    placeholder="example@mail.com"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 space-y-2">
-                <Label className="text-sm text-neutral-800">Resume *</Label>
-
-                {/* UI-only placeholder; real upload comes later */}
-                <div className="flex h-11 items-center justify-between rounded-xl border bg-white px-4">
-                  <div className="text-sm text-neutral-600">Resume</div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="h-8 rounded-lg"
-                  >
-                    Resume
-                  </Button>
-                </div>
-
-                <div className="text-xs text-neutral-500">
-                  PDF Only, 2 MB Max
-                </div>
-              </div>
-
-              <div className="mt-8 flex justify-end">
-                <Button className="h-11 rounded-xl bg-orange-600 px-8 text-white hover:bg-orange-700">
-                  Submit application
-                </Button>
-              </div>
-            </Card>
+            </form>
           </div>
         </div>
       </div>
