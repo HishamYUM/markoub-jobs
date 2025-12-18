@@ -1,118 +1,102 @@
-import { createFileRoute } from '@tanstack/react-router'
+import * as React from 'react'
+import { Link, createFileRoute } from '@tanstack/react-router'
+import { listPositionsFn } from '../server/api/positions'
+
+import { Button } from '../components/ui/button'
 import {
-  Zap,
-  Server,
-  Route as RouteIcon,
-  Shield,
-  Waves,
-  Sparkles,
-} from 'lucide-react'
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({
+  loader: async () => listPositionsFn(),
+  component: OpenPositionsPage,
+})
 
-function App() {
-  const features = [
-    {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: 'Powerful Server Functions',
-      description:
-        'Write server-side code that seamlessly integrates with your client components. Type-safe, secure, and simple.',
-    },
-    {
-      icon: <Server className="w-12 h-12 text-cyan-400" />,
-      title: 'Flexible Server Side Rendering',
-      description:
-        'Full-document SSR, streaming, and progressive enhancement out of the box. Control exactly what renders where.',
-    },
-    {
-      icon: <RouteIcon className="w-12 h-12 text-cyan-400" />,
-      title: 'API Routes',
-      description:
-        'Build type-safe API endpoints alongside your application. No separate backend needed.',
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: 'Strongly Typed Everything',
-      description:
-        'End-to-end type safety from server to client. Catch errors before they reach production.',
-    },
-    {
-      icon: <Waves className="w-12 h-12 text-cyan-400" />,
-      title: 'Full Streaming Support',
-      description:
-        'Stream data from server to client progressively. Perfect for AI applications and real-time updates.',
-    },
-    {
-      icon: <Sparkles className="w-12 h-12 text-cyan-400" />,
-      title: 'Next Generation Ready',
-      description:
-        'Built from the ground up for modern web applications. Deploy anywhere JavaScript runs.',
-    },
-  ]
+function OpenPositionsPage() {
+  const positions = Route.useLoaderData()
+
+  const departments = React.useMemo(() => {
+    const set = new Set<string>()
+    for (const p of positions) set.add(p.department)
+    return ['All departments', ...Array.from(set).sort()]
+  }, [positions])
+
+  const [department, setDepartment] = React.useState('All departments')
+
+  const filtered = React.useMemo(() => {
+    if (department === 'All departments') return positions
+    return positions.filter((p) => p.department === department)
+  }, [positions, department])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <img
-              src="/tanstack-circle-logo.png"
-              alt="TanStack Logo"
-              className="w-24 h-24 md:w-32 md:h-32"
-            />
-            <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
-              <span className="text-gray-300">TANSTACK</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                START
-              </span>
-            </h1>
-          </div>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            The framework for next generation AI applications
-          </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Full-stack framework powered by TanStack Router for React and Solid.
-            Build modern applications with server functions, streaming, and type
-            safety.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="https://tanstack.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-cyan-500/50"
-            >
-              Documentation
-            </a>
-            <p className="text-gray-400 text-sm mt-2">
-              Begin your TanStack Start journey by editing{' '}
-              <code className="px-2 py-1 bg-slate-700 rounded text-cyan-400">
-                /src/routes/index.tsx
-              </code>
-            </p>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-neutral-200">
+      <div className="mx-auto w-full max-w-6xl px-6 py-14">
+        <h1 className="text-center text-5xl font-semibold tracking-tight text-neutral-900">
+          Open Positions
+        </h1>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
+        <div className="mt-14 flex items-center justify-between">
+          <div className="text-xl font-semibold text-neutral-800">
+            We have {filtered.length} open positions
+          </div>
+
+          <Select value={department} onValueChange={setDepartment}>
+            <SelectTrigger className="w-55 rounded-xl bg-white">
+              <SelectValue placeholder="All departments" />
+            </SelectTrigger>
+            <SelectContent>
+              {departments.map((d) => (
+                <SelectItem key={d} value={d}>
+                  {d}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="mt-8">
+          {filtered.map((p) => (
             <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
+              key={p.id}
+              className="flex items-center justify-between border-b border-neutral-300 py-7"
             >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
-              </p>
+              <div className="space-y-1">
+                <Link
+                  to="/positions/$id"
+                  params={{ id: p.id }}
+                  className="text-2xl font-semibold text-neutral-900 hover:underline"
+                >
+                  {p.title}
+                </Link>
+                <div className="text-base text-neutral-600">{p.department}</div>
+              </div>
+
+              <div className="flex items-center gap-16">
+                <div className="text-lg text-neutral-800">Hybrid</div>
+                <div className="text-lg text-neutral-800">Rabat, Morocco</div>
+                <Link to="/positions/$id" params={{ id: p.id }}>
+                  <Button variant="outline" className="h-10 rounded-xl px-7">
+                    Apply
+                  </Button>
+                </Link>
+              </div>
             </div>
           ))}
         </div>
-      </section>
+
+        <div className="mt-12 flex flex-col items-center gap-3">
+          <div className="text-lg text-neutral-700">
+            No matching role right now?
+          </div>
+          <Button className="h-11 rounded-xl bg-orange-600 px-8 text-white hover:bg-orange-700">
+            Apply spontaneously
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }
