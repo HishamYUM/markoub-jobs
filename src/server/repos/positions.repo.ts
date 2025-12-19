@@ -21,3 +21,7 @@ export async function getPositionById(id: string): Promise<PositionRow | null> {
 
   return rows[0] ?? null
 }
+
+export async function adminListPositions() {
+  return db.select().from(positions).orderBy(desc(positions.createdAt))
+}

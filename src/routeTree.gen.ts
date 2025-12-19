@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ApplicationSuccessRouteImport } from './routes/application-success'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as PositionsIdRouteImport } from './routes/positions/$id'
+import { Route as AdminPositionsIndexRouteImport } from './routes/admin/positions/index'
+import { Route as AdminApplicationsIndexRouteImport } from './routes/admin/applications/index'
 
 const ApplicationSuccessRoute = ApplicationSuccessRouteImport.update({
   id: '/application-success',
@@ -23,9 +26,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PositionsIdRoute = PositionsIdRouteImport.update({
   id: '/positions/$id',
   path: '/positions/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPositionsIndexRoute = AdminPositionsIndexRouteImport.update({
+  id: '/admin/positions/',
+  path: '/admin/positions/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminApplicationsIndexRoute = AdminApplicationsIndexRouteImport.update({
+  id: '/admin/applications/',
+  path: '/admin/applications/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -33,30 +51,61 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/applications': typeof AdminApplicationsIndexRoute
+  '/admin/positions': typeof AdminPositionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/applications': typeof AdminApplicationsIndexRoute
+  '/admin/positions': typeof AdminPositionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/applications/': typeof AdminApplicationsIndexRoute
+  '/admin/positions/': typeof AdminPositionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/application-success' | '/positions/$id'
+  fullPaths:
+    | '/'
+    | '/application-success'
+    | '/positions/$id'
+    | '/admin'
+    | '/admin/applications'
+    | '/admin/positions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/application-success' | '/positions/$id'
-  id: '__root__' | '/' | '/application-success' | '/positions/$id'
+  to:
+    | '/'
+    | '/application-success'
+    | '/positions/$id'
+    | '/admin'
+    | '/admin/applications'
+    | '/admin/positions'
+  id:
+    | '__root__'
+    | '/'
+    | '/application-success'
+    | '/positions/$id'
+    | '/admin/'
+    | '/admin/applications/'
+    | '/admin/positions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApplicationSuccessRoute: typeof ApplicationSuccessRoute
   PositionsIdRoute: typeof PositionsIdRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminApplicationsIndexRoute: typeof AdminApplicationsIndexRoute
+  AdminPositionsIndexRoute: typeof AdminPositionsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +124,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/positions/$id': {
       id: '/positions/$id'
       path: '/positions/$id'
       fullPath: '/positions/$id'
       preLoaderRoute: typeof PositionsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/positions/': {
+      id: '/admin/positions/'
+      path: '/admin/positions'
+      fullPath: '/admin/positions'
+      preLoaderRoute: typeof AdminPositionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/applications/': {
+      id: '/admin/applications/'
+      path: '/admin/applications'
+      fullPath: '/admin/applications'
+      preLoaderRoute: typeof AdminApplicationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -89,6 +159,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApplicationSuccessRoute: ApplicationSuccessRoute,
   PositionsIdRoute: PositionsIdRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminApplicationsIndexRoute: AdminApplicationsIndexRoute,
+  AdminPositionsIndexRoute: AdminPositionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
