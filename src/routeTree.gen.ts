@@ -15,6 +15,8 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as PositionsIdRouteImport } from './routes/positions/$id'
 import { Route as AdminPositionsIndexRouteImport } from './routes/admin/positions/index'
 import { Route as AdminApplicationsIndexRouteImport } from './routes/admin/applications/index'
+import { Route as AdminPositionsNewRouteImport } from './routes/admin/positions/new'
+import { Route as AdminPositionsIdRouteImport } from './routes/admin/positions/$id'
 
 const ApplicationSuccessRoute = ApplicationSuccessRouteImport.update({
   id: '/application-success',
@@ -46,12 +48,24 @@ const AdminApplicationsIndexRoute = AdminApplicationsIndexRouteImport.update({
   path: '/admin/applications/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPositionsNewRoute = AdminPositionsNewRouteImport.update({
+  id: '/admin/positions/new',
+  path: '/admin/positions/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPositionsIdRoute = AdminPositionsIdRouteImport.update({
+  id: '/admin/positions/$id',
+  path: '/admin/positions/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/positions/$id': typeof AdminPositionsIdRoute
+  '/admin/positions/new': typeof AdminPositionsNewRoute
   '/admin/applications': typeof AdminApplicationsIndexRoute
   '/admin/positions': typeof AdminPositionsIndexRoute
 }
@@ -60,6 +74,8 @@ export interface FileRoutesByTo {
   '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/positions/$id': typeof AdminPositionsIdRoute
+  '/admin/positions/new': typeof AdminPositionsNewRoute
   '/admin/applications': typeof AdminApplicationsIndexRoute
   '/admin/positions': typeof AdminPositionsIndexRoute
 }
@@ -69,6 +85,8 @@ export interface FileRoutesById {
   '/application-success': typeof ApplicationSuccessRoute
   '/positions/$id': typeof PositionsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/positions/$id': typeof AdminPositionsIdRoute
+  '/admin/positions/new': typeof AdminPositionsNewRoute
   '/admin/applications/': typeof AdminApplicationsIndexRoute
   '/admin/positions/': typeof AdminPositionsIndexRoute
 }
@@ -79,6 +97,8 @@ export interface FileRouteTypes {
     | '/application-success'
     | '/positions/$id'
     | '/admin'
+    | '/admin/positions/$id'
+    | '/admin/positions/new'
     | '/admin/applications'
     | '/admin/positions'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +107,8 @@ export interface FileRouteTypes {
     | '/application-success'
     | '/positions/$id'
     | '/admin'
+    | '/admin/positions/$id'
+    | '/admin/positions/new'
     | '/admin/applications'
     | '/admin/positions'
   id:
@@ -95,6 +117,8 @@ export interface FileRouteTypes {
     | '/application-success'
     | '/positions/$id'
     | '/admin/'
+    | '/admin/positions/$id'
+    | '/admin/positions/new'
     | '/admin/applications/'
     | '/admin/positions/'
   fileRoutesById: FileRoutesById
@@ -104,6 +128,8 @@ export interface RootRouteChildren {
   ApplicationSuccessRoute: typeof ApplicationSuccessRoute
   PositionsIdRoute: typeof PositionsIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminPositionsIdRoute: typeof AdminPositionsIdRoute
+  AdminPositionsNewRoute: typeof AdminPositionsNewRoute
   AdminApplicationsIndexRoute: typeof AdminApplicationsIndexRoute
   AdminPositionsIndexRoute: typeof AdminPositionsIndexRoute
 }
@@ -152,6 +178,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminApplicationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/positions/new': {
+      id: '/admin/positions/new'
+      path: '/admin/positions/new'
+      fullPath: '/admin/positions/new'
+      preLoaderRoute: typeof AdminPositionsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/positions/$id': {
+      id: '/admin/positions/$id'
+      path: '/admin/positions/$id'
+      fullPath: '/admin/positions/$id'
+      preLoaderRoute: typeof AdminPositionsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -160,6 +200,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApplicationSuccessRoute: ApplicationSuccessRoute,
   PositionsIdRoute: PositionsIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminPositionsIdRoute: AdminPositionsIdRoute,
+  AdminPositionsNewRoute: AdminPositionsNewRoute,
   AdminApplicationsIndexRoute: AdminApplicationsIndexRoute,
   AdminPositionsIndexRoute: AdminPositionsIndexRoute,
 }

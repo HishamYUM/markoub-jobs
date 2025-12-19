@@ -1,7 +1,14 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { adminListPositionsFn } from '../../../server/api/admin/positions'
+import { toast } from 'sonner'
+import { Pencil, Trash2 } from 'lucide-react'
+
+import {
+  adminDeletePositionFn,
+  adminListPositionsFn,
+} from '../../../server/api/admin/positions'
 import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
+import { getErrorCode, toUserMessage } from '../../../lib/appErrors'
 
 export const Route = createFileRoute('/admin/positions/')({
   loader: async () => adminListPositionsFn(),
@@ -10,7 +17,20 @@ export const Route = createFileRoute('/admin/positions/')({
 
 function AdminPositionsList() {
   const positions = Route.useLoaderData()
+  const navigate = Route.useNavigate()
 
+  async function onDelete(id: string) {
+    const ok = window.confirm('Delete this position? This cannot be undone.')
+    if (!ok) return
+
+    try {
+      await adminDeletePositionFn({ data: { id } })
+      toast.success('Position deleted')
+      await navigate({ to: '/admin/positions' })
+    } catch (err) {
+      toast.error(toUserMessage(getErrorCode(err)))
+    }
+  }
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto w-full max-w-6xl px-6 py-10">
@@ -26,7 +46,7 @@ function AdminPositionsList() {
 
           <Button
             asChild
-            className="rounded-xl bg-orange-500 text-white hover:bg-orange-600"
+            className="rounded-lg bg-orange-500 text-white hover:bg-orange-600"
           >
             <Link to="/admin/positions/new">New position</Link>
           </Button>
@@ -60,17 +80,36 @@ function AdminPositionsList() {
                     <td className="px-4 py-3 text-neutral-700">
                       {p.employmentType}
                     </td>
-                    <td className="px-4 py-3 text-neutral-700">
-                      {p.isActive ? 'Yes' : 'No'}
+                    <td className="px-4 py-3">
+                      <div className="inline-flex items-center gap-2">
+                        <span
+                          className={`h-2.5 w-2.5 rounded-full ${
+                            p.isActive ? 'bg-green-500' : 'bg-neutral-300'
+                          }`}
+                        />
+                        <span className="text-neutral-700">
+                          {p.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <Link
-                        to="/admin/positions/$id"
-                        params={{ id: p.id }}
-                        className="text-orange-600 hover:underline"
-                      >
-                        Edit
-                      </Link>
+                      <div className="inline-flex items-center gap-3">
+                        <Link
+                          to="/admin/positions/$id"
+                          params={{ id: p.id }}
+                          className="text-orange-500 hover:underline"
+                        >
+                          <Pencil size={14} />
+                        </Link>
+
+                        <button
+                          type="button"
+                          onClick={() => void onDelete(p.id)}
+                          className="text-sm text-red-600 hover:underline"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
