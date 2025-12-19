@@ -2,6 +2,8 @@ import { and, desc, eq, isNull } from 'drizzle-orm'
 import { db } from '../db'
 import { applications, positions } from '../db/schema'
 
+export type ApplicationRow = typeof applications.$inferSelect
+
 export async function createApplication(data: {
   positionId?: string | null
   fullName: string
@@ -42,4 +44,26 @@ export async function adminListApplications(filters: {
     .orderBy(desc(applications.createdAt))
 
   return rows
+}
+
+export async function adminGetApplicationById(id: string) {
+  const rows = await db
+    .select({
+      id: applications.id,
+      fullName: applications.fullName,
+      email: applications.email,
+      resumePath: applications.resumePath,
+      createdAt: applications.createdAt,
+      positionId: applications.positionId,
+      position: {
+        id: positions.id,
+        title: positions.title,
+      },
+    })
+    .from(applications)
+    .leftJoin(positions, eq(applications.positionId, positions.id))
+    .where(eq(applications.id, id))
+    .limit(1)
+
+  return rows[0] ?? null
 }
