@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { toast } from 'sonner'
 import { listPositionsFn } from '../server/api/positions'
-
 import { Button } from '../components/ui/button'
 import {
   Select,
@@ -10,6 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select'
+import { getErrorCode, toUserMessage } from '@/lib/appErrors'
+
+import { submitApplicationFn } from '@/server/api/applications'
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+
+import { ApplicationForm } from '@/components/positions/ApplicationForm'
 
 export const Route = createFileRoute('/')({
   loader: async () => listPositionsFn(),
@@ -18,6 +31,26 @@ export const Route = createFileRoute('/')({
 
 function OpenPositionsPage() {
   const positions = Route.useLoaderData()
+  const navigate = Route.useNavigate()
+
+  const [open, setOpen] = React.useState(false)
+  const [submitting, setSubmitting] = React.useState(false)
+
+  async function onSpontaneousSubmit(fd: FormData) {
+    setSubmitting(true)
+    try {
+      // Do NOT set positionId here
+      await submitApplicationFn({ data: fd })
+      toast.success('Application sent successfully')
+      await navigate({ to: '/application-success' })
+
+      setOpen(false)
+    } catch (err) {
+      toast.error(toUserMessage(getErrorCode(err)))
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const departments = React.useMemo(() => {
     const set = new Set<string>()
@@ -96,9 +129,34 @@ function OpenPositionsPage() {
           <div className="text-lg text-neutral-700">
             No matching role right now?
           </div>
-          <Button className="h-11 rounded-xl bg-orange-600 px-8 text-white hover:bg-orange-700">
-            Apply spontaneously
-          </Button>
+
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="rounded-xl bg-orange-600 px-8 text-white hover:bg-orange-700">
+                Apply spontaneously
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-xl rounded-2xl p-0">
+              <div className="p-6">
+                <DialogHeader>
+                  <DialogTitle>Apply spontaneously</DialogTitle>
+                </DialogHeader>
+
+                <div className="mt-4">
+                  <ApplicationForm
+                    title=""
+                    submitting={submitting}
+                    positions={positions.map((p) => ({
+                      id: p.id,
+                      title: p.title,
+                    }))}
+                    onSubmit={onSpontaneousSubmit}
+                  />
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>
