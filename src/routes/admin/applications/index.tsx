@@ -9,6 +9,11 @@ export const Route = createFileRoute('/admin/applications/')({
 
 function AdminApplicationsList() {
   const apps = Route.useLoaderData()
+  const baseCellClass = 'px-4 py-3'
+  const headerCellClass = `${baseCellClass} text-left font-medium`
+  const neutralCellClass = `${baseCellClass} text-neutral-700`
+  const nameCellClass = `${baseCellClass} font-medium text-neutral-900`
+  const detailsCellClass = `${baseCellClass} text-right`
 
   return (
     <div className="min-h-screen bg-white">
@@ -25,27 +30,27 @@ function AdminApplicationsList() {
             <table className="w-full text-sm">
               <thead className="bg-neutral-50 text-neutral-600">
                 <tr>
-                  <th className="px-4 py-3 text-left font-medium">Created</th>
-                  <th className="px-4 py-3 text-left font-medium">Candidate</th>
-                  <th className="px-4 py-3 text-left font-medium">Email</th>
-                  <th className="px-4 py-3 text-left font-medium">Position</th>
-                  <th className="px-4 py-3 text-right font-medium">Details</th>
+                  <th className={headerCellClass}>Created</th>
+                  <th className={headerCellClass}>Candidate</th>
+                  <th className={headerCellClass}>Email</th>
+                  <th className={headerCellClass}>Position</th>
+                  <th className={`${baseCellClass} text-right font-medium`}>
+                    Details
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {apps.map((a) => (
                   <tr key={a.id} className="border-t">
-                    <td className="px-4 py-3 text-neutral-700">
+                    <td className={neutralCellClass}>
                       {new Date(a.createdAt).toLocaleString()}
                     </td>
-                    <td className="px-4 py-3 font-medium text-neutral-900">
-                      {a.fullName}
-                    </td>
-                    <td className="px-4 py-3 text-neutral-700">{a.email}</td>
-                    <td className="px-4 py-3 text-neutral-700">
+                    <td className={nameCellClass}>{a.fullName}</td>
+                    <td className={neutralCellClass}>{a.email}</td>
+                    <td className={neutralCellClass}>
                       {a.positionTitle ?? 'Spontaneous'}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className={detailsCellClass}>
                       <Link
                         to="/admin/applications/$id"
                         params={{ id: a.id }}

@@ -65,5 +65,14 @@ export async function adminGetApplicationById(id: string) {
     .where(eq(applications.id, id))
     .limit(1)
 
-  return rows[0] ?? null
+  const row = rows[0].id ? rows[0] : null
+  if (!row) return null
+
+  // If no linked position, drizzle will return { id: null, title: null }
+  const position =
+    row.position?.id && row.position.title
+      ? { id: row.position.id, title: row.position.title }
+      : null
+
+  return { ...row, position }
 }

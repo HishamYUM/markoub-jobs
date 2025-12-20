@@ -11,6 +11,15 @@ import {
   adminUpdatePositionFn,
 } from '../../../server/api/admin/positions'
 import { getErrorCode, toUserMessage } from '../../../lib/appErrors'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+type WorkMode = 'remote' | 'hybrid' | 'onsite'
 
 export const Route = createFileRoute('/admin/positions/$id')({
   loader: async ({ params }) => adminGetPositionFn({ data: { id: params.id } }),
@@ -22,6 +31,7 @@ function EditPositionPage() {
   const position = Route.useLoaderData()
   const [submitting, setSubmitting] = React.useState(false)
   const [toggling, setToggling] = React.useState(false)
+  const [workMode, setWorkMode] = React.useState<WorkMode>(position.workMode)
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -34,6 +44,10 @@ function EditPositionPage() {
           title: String(fd.get('title') ?? ''),
           department: String(fd.get('department') ?? ''),
           employmentType: String(fd.get('employmentType') ?? ''),
+          workMode: String(fd.get('workMode') ?? 'hybrid') as
+            | 'remote'
+            | 'onsite'
+            | 'hybrid',
           location: String(fd.get('location') ?? ''),
           description: String(fd.get('description') ?? ''),
         },
@@ -66,7 +80,7 @@ function EditPositionPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto w-full max-w-3xl px-6 py-10">
+      <div className="mx-auto w-full  px-6 py-10">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-neutral-900">
@@ -80,7 +94,7 @@ function EditPositionPage() {
           <Button
             type="button"
             variant="outline"
-            className="rounded-xl"
+            className="rounded-md"
             disabled={toggling}
             onClick={toggleActive}
           >
@@ -93,7 +107,7 @@ function EditPositionPage() {
         </div>
 
         <form onSubmit={onSubmit} className="mt-6">
-          <Card className="rounded-2xl border border-neutral-200 p-8 shadow-sm space-y-5">
+          <Card className="rounded-xl border border-neutral-200 p-8 shadow-sm space-y-5">
             <Field name="title" label="Title" defaultValue={position.title} />
             <Field
               name="department"
@@ -112,12 +126,29 @@ function EditPositionPage() {
             />
 
             <div className="space-y-2">
+              <Label>Work mode</Label>
+              <Select
+                value={workMode}
+                onValueChange={(value) => setWorkMode(value as WorkMode)}
+              >
+                <SelectTrigger className="h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-sm">
+                  <SelectValue placeholder="Select work mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="remote">Remote</SelectItem>
+                  <SelectItem value="onsite">On-site</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <Label>Description</Label>
               <textarea
                 name="description"
                 required
                 defaultValue={position.description}
-                className="min-h-[160px] w-full rounded-xl border border-neutral-200 p-3 text-sm"
+                className="min-h-40 w-full rounded-md border border-neutral-200 p-3 text-sm"
               />
             </div>
 
@@ -125,7 +156,7 @@ function EditPositionPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl"
+                className="rounded-md"
                 onClick={() => navigate({ to: '/admin/positions' })}
               >
                 Cancel
@@ -133,7 +164,7 @@ function EditPositionPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="rounded-xl bg-orange-500 text-white hover:bg-orange-600"
+                className="rounded-md bg-orange-500 text-white hover:bg-orange-600"
               >
                 {submitting ? 'Saving…' : 'Save'}
               </Button>
@@ -161,7 +192,7 @@ function Field({
         name={name}
         required
         defaultValue={defaultValue}
-        className="h-11 rounded-xl"
+        className="h-11 rounded-md"
       />
     </div>
   )

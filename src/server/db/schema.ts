@@ -1,11 +1,14 @@
 import {
   boolean,
   index,
+  pgEnum,
   pgTable,
   text,
   timestamp,
   uuid,
 } from 'drizzle-orm/pg-core'
+
+export const workModeEnum = pgEnum('work_mode', ['remote', 'onsite', 'hybrid'])
 
 export const positions = pgTable(
   'positions',
@@ -16,6 +19,8 @@ export const positions = pgTable(
     department: text('department').notNull(),
     employmentType: text('employment_type').notNull(),
     location: text('location').notNull(),
+    workMode: workModeEnum('work_mode').notNull().default('hybrid'),
+
     description: text('description').notNull(),
 
     isActive: boolean('is_active').notNull().default(true),
@@ -30,6 +35,7 @@ export const positions = pgTable(
   (t) => [
     index('positions_is_active_idx').on(t.isActive),
     index('positions_created_at_idx').on(t.createdAt),
+    index('positions_work_mode_idx').on(t.workMode),
   ],
 )
 

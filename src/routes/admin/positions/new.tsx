@@ -5,6 +5,13 @@ import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
 import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../../components/ui/select'
 import { adminCreatePositionFn } from '../../../server/api/admin/positions'
 import { getErrorCode, toUserMessage } from '../../../lib/appErrors'
 
@@ -12,9 +19,12 @@ export const Route = createFileRoute('/admin/positions/new')({
   component: NewPositionPage,
 })
 
+type WorkMode = 'remote' | 'hybrid' | 'onsite'
+
 function NewPositionPage() {
   const navigate = Route.useNavigate()
   const [submitting, setSubmitting] = React.useState(false)
+  const [workMode, setWorkMode] = React.useState<WorkMode>('hybrid')
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -26,6 +36,7 @@ function NewPositionPage() {
           title: String(fd.get('title') ?? ''),
           department: String(fd.get('department') ?? ''),
           employmentType: String(fd.get('employmentType') ?? ''),
+          workMode,
           location: String(fd.get('location') ?? ''),
           description: String(fd.get('description') ?? ''),
         },
@@ -41,24 +52,40 @@ function NewPositionPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto w-full max-w-3xl px-6 py-10">
+      <div className="mx-auto w-full px-6 py-10">
         <h1 className="text-2xl font-semibold text-neutral-900">
           New position
         </h1>
 
         <form onSubmit={onSubmit} className="mt-6">
-          <Card className="rounded-2xl border border-neutral-200 p-8 shadow-sm space-y-5">
+          <Card className="rounded-xl border border-neutral-200 p-8 shadow-sm space-y-5">
             <Field name="title" label="Title" />
             <Field name="department" label="Department" />
             <Field name="employmentType" label="Employment type" />
             <Field name="location" label="Location" />
+            <div className="space-y-2">
+              <Label>Work mode</Label>
+              <Select
+                value={workMode}
+                onValueChange={(value) => setWorkMode(value as WorkMode)}
+              >
+                <SelectTrigger className="h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-sm">
+                  <SelectValue placeholder="Select work mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="remote">Remote</SelectItem>
+                  <SelectItem value="onsite">On-site</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             <div className="space-y-2">
               <Label>Description</Label>
               <textarea
                 name="description"
                 required
-                className="min-h-[160px] w-full rounded-xl border border-neutral-200 p-3 text-sm"
+                className="min-h-40 w-full rounded-md border border-neutral-200 p-3 text-sm"
               />
             </div>
 
@@ -66,7 +93,7 @@ function NewPositionPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl"
+                className="rounded-md"
                 onClick={() => navigate({ to: '/admin/positions' })}
               >
                 Cancel
@@ -74,7 +101,7 @@ function NewPositionPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="rounded-xl bg-orange-500 text-white hover:bg-orange-600"
+                className="rounded-md bg-orange-500 text-white hover:bg-orange-600"
               >
                 {submitting ? 'Saving…' : 'Create'}
               </Button>
@@ -90,7 +117,7 @@ function Field({ name, label }: { name: string; label: string }) {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <Input name={name} required className="h-11 rounded-xl" />
+      <Input name={name} required className="h-11 rounded-md" />
     </div>
   )
 }
