@@ -9,6 +9,7 @@ import {
 import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
 import { getErrorCode, toUserMessage } from '../../../lib/appErrors'
+import { capitalize } from '@/lib/utils'
 
 export const Route = createFileRoute('/admin/positions/')({
   loader: async () => adminListPositionsFn(),
@@ -60,6 +61,7 @@ function AdminPositionsList() {
                   <th className={thClasses}>Title</th>
                   <th className={thClasses}>Department</th>
                   <th className={thClasses}>Location</th>
+                  <th className={thClasses}>Work Mode</th>
                   <th className={thClasses}>Type</th>
                   <th className={thClasses}>Active</th>
                   <th className="px-4 py-3 text-right font-medium">Actions</th>
@@ -71,6 +73,7 @@ function AdminPositionsList() {
                     <td className={tdTitleClasses}>{p.title}</td>
                     <td className={tdClasses}>{p.department}</td>
                     <td className={tdClasses}>{p.location}</td>
+                    <td className={tdClasses}>{capitalize(p.workMode)}</td>
                     <td className={tdClasses}>{p.employmentType}</td>
                     <td className="px-4 py-3">
                       <div className="inline-flex items-center gap-2">

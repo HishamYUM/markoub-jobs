@@ -11,6 +11,15 @@ import {
   adminUpdatePositionFn,
 } from '../../../server/api/admin/positions'
 import { getErrorCode, toUserMessage } from '../../../lib/appErrors'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+type WorkMode = 'remote' | 'hybrid' | 'onsite'
 
 export const Route = createFileRoute('/admin/positions/$id')({
   loader: async ({ params }) => adminGetPositionFn({ data: { id: params.id } }),
@@ -22,6 +31,7 @@ function EditPositionPage() {
   const position = Route.useLoaderData()
   const [submitting, setSubmitting] = React.useState(false)
   const [toggling, setToggling] = React.useState(false)
+  const [workMode, setWorkMode] = React.useState<WorkMode>(position.workMode)
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -34,6 +44,10 @@ function EditPositionPage() {
           title: String(fd.get('title') ?? ''),
           department: String(fd.get('department') ?? ''),
           employmentType: String(fd.get('employmentType') ?? ''),
+          workMode: String(fd.get('workMode') ?? 'hybrid') as
+            | 'remote'
+            | 'onsite'
+            | 'hybrid',
           location: String(fd.get('location') ?? ''),
           description: String(fd.get('description') ?? ''),
         },
@@ -110,6 +124,23 @@ function EditPositionPage() {
               label="Location"
               defaultValue={position.location}
             />
+
+            <div className="space-y-2">
+              <Label>Work mode</Label>
+              <Select
+                value={workMode}
+                onValueChange={(value) => setWorkMode(value as WorkMode)}
+              >
+                <SelectTrigger className="h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-sm">
+                  <SelectValue placeholder="Select work mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="remote">Remote</SelectItem>
+                  <SelectItem value="onsite">On-site</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             <div className="space-y-2">
               <Label>Description</Label>

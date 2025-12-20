@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dialog'
 
 import { ApplicationForm } from '@/components/positions/ApplicationForm'
+import { capitalize } from '@/lib/utils'
 
 export const Route = createFileRoute('/')({
   loader: async () => listPositionsFn(),
@@ -109,8 +110,10 @@ function OpenPositionsPage() {
               </div>
 
               <div className="flex items-center gap-16">
-                <div className="text-lg text-neutral-800">Hybrid</div>
-                <div className="text-lg text-neutral-800">Rabat, Morocco</div>
+                <div className="text-lg text-neutral-800">
+                  {p.location} ({capitalize(p.workMode)})
+                </div>
+
                 <Link
                   to="/positions/$id"
                   params={{ id: p.id }}

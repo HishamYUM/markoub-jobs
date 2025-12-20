@@ -5,6 +5,13 @@ import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
 import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../../components/ui/select'
 import { adminCreatePositionFn } from '../../../server/api/admin/positions'
 import { getErrorCode, toUserMessage } from '../../../lib/appErrors'
 
@@ -12,9 +19,12 @@ export const Route = createFileRoute('/admin/positions/new')({
   component: NewPositionPage,
 })
 
+type WorkMode = 'remote' | 'hybrid' | 'onsite'
+
 function NewPositionPage() {
   const navigate = Route.useNavigate()
   const [submitting, setSubmitting] = React.useState(false)
+  const [workMode, setWorkMode] = React.useState<WorkMode>('hybrid')
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -26,6 +36,7 @@ function NewPositionPage() {
           title: String(fd.get('title') ?? ''),
           department: String(fd.get('department') ?? ''),
           employmentType: String(fd.get('employmentType') ?? ''),
+          workMode,
           location: String(fd.get('location') ?? ''),
           description: String(fd.get('description') ?? ''),
         },
@@ -52,6 +63,22 @@ function NewPositionPage() {
             <Field name="department" label="Department" />
             <Field name="employmentType" label="Employment type" />
             <Field name="location" label="Location" />
+            <div className="space-y-2">
+              <Label>Work mode</Label>
+              <Select
+                value={workMode}
+                onValueChange={(value) => setWorkMode(value as WorkMode)}
+              >
+                <SelectTrigger className="h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-sm">
+                  <SelectValue placeholder="Select work mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="remote">Remote</SelectItem>
+                  <SelectItem value="onsite">On-site</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             <div className="space-y-2">
               <Label>Description</Label>

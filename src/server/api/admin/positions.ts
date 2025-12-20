@@ -15,6 +15,7 @@ const positionPayloadSchema = z.object({
   title: z.string().min(1),
   department: z.string().min(1),
   employmentType: z.string().min(1),
+  workMode: z.enum(['remote', 'onsite', 'hybrid']),
   location: z.string().min(1),
   description: z.string().min(1),
 })

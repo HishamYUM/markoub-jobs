@@ -10,6 +10,7 @@ import { getErrorCode, toUserMessage } from '../../lib/appErrors'
 
 import { ApplicationForm } from '../../components/positions/ApplicationForm'
 import { submitApplicationFn } from '@/server/api/applications'
+import { capitalize } from '@/lib/utils'
 
 export const Route = createFileRoute('/positions/$id')({
   loader: async ({ params }) => getPositionFn({ data: { id: params.id } }),
@@ -57,7 +58,8 @@ function PositionDetailPage() {
                   {position.title}
                 </div>
                 <div className="text-sm text-neutral-600">
-                  {position.employmentType} · {position.location}
+                  {capitalize(position.workMode)} · {position.location} ·{' '}
+                  {position.employmentType}
                 </div>
               </div>
 
