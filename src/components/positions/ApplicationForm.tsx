@@ -24,7 +24,7 @@ export type ApplicationFormProps = {
 
 const FIELD = {
   label: 'text-sm text-neutral-800',
-  input: 'h-11 rounded-lg',
+  input: 'h-11 rounded-md',
   section: 'space-y-2',
 } as const
 
@@ -52,7 +52,7 @@ export function ApplicationForm({
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-      <Card className="rounded-2xl border border-neutral-200 p-8 shadow-sm">
+      <Card className="rounded-xl border border-neutral-200 p-8 shadow-sm">
         <div className="text-lg font-semibold text-neutral-900">{title}</div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -92,7 +92,7 @@ export function ApplicationForm({
           <Button
             type="submit"
             disabled={submitting}
-            className="rounded-xl bg-orange-500 px-8 text-white hover:bg-orange-600"
+            className="rounded-md bg-orange-500 px-8 text-white hover:bg-orange-600"
           >
             {submitting ? 'Submitting…' : 'Submit application'}
           </Button>
@@ -132,7 +132,7 @@ function PositionSelect({
       <Label className={FIELD.label}>Position applying for</Label>
 
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-11 rounded-lg w-full">
+        <SelectTrigger className="h-11 rounded-md w-full">
           <SelectValue placeholder="Position applying for" />
         </SelectTrigger>
 
@@ -182,7 +182,7 @@ function ResumePicker() {
         onChange={onChange}
       />
 
-      <div className="flex h-11 items-center justify-between gap-3 rounded-lg border border-neutral-200 bg-white px-4">
+      <div className="flex h-11 items-center justify-between gap-3 rounded-md border border-neutral-200 bg-white px-4">
         <div className="min-w-0 truncate text-sm text-neutral-900">
           {file ? file.name : 'No file selected'}
         </div>

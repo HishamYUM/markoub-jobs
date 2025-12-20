@@ -15,29 +15,38 @@ function AdminHome() {
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-          <Link to="/admin/positions" className="block">
-            <Card className="rounded-2xl border border-neutral-200 p-6 shadow-sm hover:shadow">
-              <div className="text-lg font-semibold text-neutral-900">
-                Positions
-              </div>
-              <div className="mt-1 text-sm text-neutral-600">
-                Create, edit, activate/deactivate positions.
-              </div>
-            </Card>
-          </Link>
+          <AdminSectionCard
+            to="/admin/positions"
+            title="Positions"
+            description="Create, edit, activate/deactivate positions."
+          />
 
-          <Link to="/admin/applications" className="block">
-            <Card className="rounded-2xl border border-neutral-200 p-6 shadow-sm hover:shadow">
-              <div className="text-lg font-semibold text-neutral-900">
-                Applications
-              </div>
-              <div className="mt-1 text-sm text-neutral-600">
-                Review candidates and download resumes.
-              </div>
-            </Card>
-          </Link>
+          <AdminSectionCard
+            to="/admin/applications"
+            title="Applications"
+            description="Review candidates and download resumes."
+          />
         </div>
       </div>
     </div>
+  )
+}
+
+function AdminSectionCard({
+  to,
+  title,
+  description,
+}: {
+  to: string
+  title: string
+  description: string
+}) {
+  return (
+    <Link to={to} className="block">
+      <Card className="rounded-xl border border-neutral-200 p-6 shadow-sm hover:shadow">
+        <div className="text-lg font-semibold text-neutral-900">{title}</div>
+        <div className="mt-1 text-sm text-neutral-600">{description}</div>
+      </Card>
+    </Link>
   )
 }

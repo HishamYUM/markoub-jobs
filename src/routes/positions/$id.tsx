@@ -8,7 +8,6 @@ import { Card } from '../../components/ui/card'
 import { Separator } from '../../components/ui/separator'
 import { getErrorCode, toUserMessage } from '../../lib/appErrors'
 
-import { positionContent } from '../../components/positions/PositionContent'
 import { ApplicationForm } from '../../components/positions/ApplicationForm'
 import { submitApplicationFn } from '@/server/api/applications'
 
@@ -21,7 +20,7 @@ function PositionDetailPage() {
   const position = Route.useLoaderData()
   const [submitting, setSubmitting] = React.useState(false)
   const navigate = Route.useNavigate()
-  
+
   async function onSubmit(fd: FormData) {
     setSubmitting(true)
     try {
@@ -52,19 +51,19 @@ function PositionDetailPage() {
         <div className="grid grid-cols-12 gap-10">
           {/* Left summary card */}
           <div className="col-span-12 md:col-span-4">
-            <Card className="rounded-2xl border border-neutral-200 p-6 shadow-sm">
+            <Card className="rounded-xl border border-neutral-200 p-6 shadow-sm">
               <div className="space-y-2">
                 <div className="text-2xl font-semibold text-neutral-900">
                   {position.title}
                 </div>
                 <div className="text-sm text-neutral-600">
-                  Hybrid · Rabat, Morocco
+                  {position.employmentType} · {position.location}
                 </div>
               </div>
 
               <div className="mt-5">
                 <Button
-                  className="h-10 rounded-xl bg-orange-600 px-6 text-white hover:bg-orange-700"
+                  className="h-10 rounded-md bg-orange-500 px-6 text-white hover:bg-orange-600"
                   onClick={() =>
                     document
                       .getElementById('application')
@@ -80,25 +79,13 @@ function PositionDetailPage() {
           {/* Right content */}
           <div className="col-span-12 md:col-span-8">
             <Section title="What We do">
-              <p className="leading-7 text-neutral-700">
-                {positionContent.whatWeDo}
+              <p className="leading-7 text-neutral-700">{whatWeDo}</p>
+            </Section>
+
+            <Section title="Job description">
+              <p className="whitespace-pre-line leading-7 text-neutral-700">
+                {position.description}
               </p>
-            </Section>
-
-            <Section title="Your Mission">
-              <BulletList items={positionContent.mission} />
-            </Section>
-
-            <Section title="Your Profile">
-              <BulletList items={positionContent.profile} />
-            </Section>
-
-            <Section title="Tech Stack">
-              <BulletList items={positionContent.techStack} />
-            </Section>
-
-            <Section title="What We Offer">
-              <BulletList items={positionContent.offer} />
             </Section>
 
             <Separator className="my-8" />
@@ -132,14 +119,5 @@ function Section({
   )
 }
 
-function BulletList({ items }: { items: ReadonlyArray<string> }) {
-  return (
-    <ul className="list-disc space-y-2 pl-5 text-neutral-700">
-      {items.map((x, idx) => (
-        <li key={idx} className="leading-7">
-          {x}
-        </li>
-      ))}
-    </ul>
-  )
-}
+const whatWeDo =
+  'MarKoub.ma is a pioneering intercity bus ticketing platform in Morocco, committed to making travel easy, affordable, and convenient for everyone. We provide a seamless online experience for booking bus tickets, connecting users with a wide network of bus operators across the country. As we continue to grow, we are looking for a dynamic and experienced Full Stack Developer to join our team.'

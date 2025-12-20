@@ -66,7 +66,7 @@ function EditPositionPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto w-full max-w-3xl px-6 py-10">
+      <div className="mx-auto w-full  px-6 py-10">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-neutral-900">
@@ -80,7 +80,7 @@ function EditPositionPage() {
           <Button
             type="button"
             variant="outline"
-            className="rounded-xl"
+            className="rounded-md"
             disabled={toggling}
             onClick={toggleActive}
           >
@@ -93,7 +93,7 @@ function EditPositionPage() {
         </div>
 
         <form onSubmit={onSubmit} className="mt-6">
-          <Card className="rounded-2xl border border-neutral-200 p-8 shadow-sm space-y-5">
+          <Card className="rounded-xl border border-neutral-200 p-8 shadow-sm space-y-5">
             <Field name="title" label="Title" defaultValue={position.title} />
             <Field
               name="department"
@@ -117,7 +117,7 @@ function EditPositionPage() {
                 name="description"
                 required
                 defaultValue={position.description}
-                className="min-h-[160px] w-full rounded-xl border border-neutral-200 p-3 text-sm"
+                className="min-h-40 w-full rounded-md border border-neutral-200 p-3 text-sm"
               />
             </div>
 
@@ -125,7 +125,7 @@ function EditPositionPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl"
+                className="rounded-md"
                 onClick={() => navigate({ to: '/admin/positions' })}
               >
                 Cancel
@@ -133,7 +133,7 @@ function EditPositionPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="rounded-xl bg-orange-500 text-white hover:bg-orange-600"
+                className="rounded-md bg-orange-500 text-white hover:bg-orange-600"
               >
                 {submitting ? 'Saving…' : 'Save'}
               </Button>
@@ -161,7 +161,7 @@ function Field({
         name={name}
         required
         defaultValue={defaultValue}
-        className="h-11 rounded-xl"
+        className="h-11 rounded-md"
       />
     </div>
   )

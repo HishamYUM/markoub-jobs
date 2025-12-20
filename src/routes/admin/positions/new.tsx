@@ -41,13 +41,13 @@ function NewPositionPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto w-full max-w-3xl px-6 py-10">
+      <div className="mx-auto w-full px-6 py-10">
         <h1 className="text-2xl font-semibold text-neutral-900">
           New position
         </h1>
 
         <form onSubmit={onSubmit} className="mt-6">
-          <Card className="rounded-2xl border border-neutral-200 p-8 shadow-sm space-y-5">
+          <Card className="rounded-xl border border-neutral-200 p-8 shadow-sm space-y-5">
             <Field name="title" label="Title" />
             <Field name="department" label="Department" />
             <Field name="employmentType" label="Employment type" />
@@ -58,7 +58,7 @@ function NewPositionPage() {
               <textarea
                 name="description"
                 required
-                className="min-h-[160px] w-full rounded-xl border border-neutral-200 p-3 text-sm"
+                className="min-h-40 w-full rounded-md border border-neutral-200 p-3 text-sm"
               />
             </div>
 
@@ -66,7 +66,7 @@ function NewPositionPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl"
+                className="rounded-md"
                 onClick={() => navigate({ to: '/admin/positions' })}
               >
                 Cancel
@@ -74,7 +74,7 @@ function NewPositionPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="rounded-xl bg-orange-500 text-white hover:bg-orange-600"
+                className="rounded-md bg-orange-500 text-white hover:bg-orange-600"
               >
                 {submitting ? 'Saving…' : 'Create'}
               </Button>
@@ -90,7 +90,7 @@ function Field({ name, label }: { name: string; label: string }) {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <Input name={name} required className="h-11 rounded-xl" />
+      <Input name={name} required className="h-11 rounded-md" />
     </div>
   )
 }

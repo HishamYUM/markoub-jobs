@@ -1,7 +1,9 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { ArrowDownToLine, ArrowLeft } from 'lucide-react'
 import { adminGetApplicationFn } from '../../../server/api/admin/applications'
 import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
+
 
 export const Route = createFileRoute('/admin/applications/$id')({
   loader: async ({ params }) =>
@@ -16,19 +18,19 @@ function ApplicationDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto w-full max-w-3xl px-6 py-10">
+      <div className="mx-auto w-full  px-6 py-10">
         <div className="mb-6">
           <Link
             to="/admin/applications"
             className="text-sm text-neutral-600 hover:underline"
           >
-            ← Back to applications
+            <ArrowLeft size={16} className="inline-block mr-1" /> Back to applications
           </Link>
         </div>
 
         <h1 className="text-2xl font-semibold text-neutral-900">Application</h1>
 
-        <Card className="mt-6 rounded-2xl border border-neutral-200 p-8 shadow-sm space-y-4">
+        <Card className="mt-6 rounded-xl border border-neutral-200 p-8 shadow-sm space-y-4">
           <Row label="Candidate" value={app.fullName} />
           <Row label="Email" value={app.email} />
           <Row label="Position" value={app.position?.title ?? 'Spontaneous'} />
@@ -38,7 +40,7 @@ function ApplicationDetailPage() {
           />
 
           <div className="pt-4 flex justify-end gap-3">
-            <Button asChild variant="outline" className="rounded-xl">
+            <Button asChild variant="outline" className="rounded-md">
               <a href={resumeUrl} target="_blank" rel="noreferrer">
                 Open resume
               </a>
@@ -46,10 +48,10 @@ function ApplicationDetailPage() {
 
             <Button
               asChild
-              className="rounded-xl bg-orange-500 text-white hover:bg-orange-600"
+              className="rounded-md bg-orange-500 text-white hover:bg-orange-600"
             >
               <a href={resumeUrl} download>
-                Download resume
+                Download resume <ArrowDownToLine />
               </a>
             </Button>
           </div>

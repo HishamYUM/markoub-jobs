@@ -66,7 +66,7 @@ function OpenPositionsPage() {
   }, [positions, department])
 
   return (
-    <div className="min-h-screen bg-neutral-200">
+    <div className="min-h-screen bg-slate-100">
       <div className="mx-auto w-full max-w-6xl px-6 py-14">
         <h1 className="text-center text-5xl font-semibold tracking-tight text-neutral-900">
           Open Positions
@@ -78,7 +78,7 @@ function OpenPositionsPage() {
           </div>
 
           <Select value={department} onValueChange={setDepartment}>
-            <SelectTrigger className="w-55 rounded-xl bg-white">
+            <SelectTrigger className="w-55 rounded-lg bg-white">
               <SelectValue placeholder="All departments" />
             </SelectTrigger>
             <SelectContent>
@@ -116,7 +116,7 @@ function OpenPositionsPage() {
                   params={{ id: p.id }}
                   hash="application"
                 >
-                  <Button variant="outline" className="h-10 rounded-xl px-7">
+                  <Button variant="outline" className="h-10 rounded-lg px-7">
                     Apply
                   </Button>
                 </Link>
@@ -132,7 +132,7 @@ function OpenPositionsPage() {
 
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="rounded-xl bg-orange-600 px-8 text-white hover:bg-orange-700">
+              <Button className="rounded-lg bg-orange-500 px-8 text-white hover:bg-orange-600">
                 Apply spontaneously
               </Button>
             </DialogTrigger>
