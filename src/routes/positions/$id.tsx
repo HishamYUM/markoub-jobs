@@ -11,10 +11,26 @@ import { getErrorCode, toUserMessage } from '../../lib/appErrors'
 import { ApplicationForm } from '../../components/positions/ApplicationForm'
 import { submitApplicationFn } from '@/server/api/applications'
 import { capitalize } from '@/lib/utils'
+import { ResourceNotFound } from '@/components/error/ResourceNotFound'
+import { GenericError } from '@/components/error/GenericError'
 
 export const Route = createFileRoute('/positions/$id')({
   loader: async ({ params }) => getPositionFn({ data: { id: params.id } }),
   component: PositionDetailPage,
+  errorComponent: ({ error: _error }) => {
+    return (
+      <GenericError
+        backTo={{ to: '/', label: 'Back to open positions' }}
+      />
+    )
+  },
+  notFoundComponent: () => (
+    <ResourceNotFound
+      title="Position not found"
+      backTo={{ to: '/', label: 'Back to open positions' }}
+      primaryAction={{ to: '/', label: 'Home' }}
+    />
+  ),
 })
 
 function PositionDetailPage() {

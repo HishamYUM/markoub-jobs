@@ -15,5 +15,14 @@ export function toUserMessage(code: string): string {
 
 export function getErrorCode(err: unknown): string {
   if (err instanceof Error && err.message) return err.message
+
+  if (err instanceof Response) {
+    return err.status === 404 ? 'NOT_FOUND' : `HTTP_${err.status}`
+  }
+
   return 'UNKNOWN'
+}
+
+export function isHttpNotFound(err: unknown): boolean {
+  return err instanceof Response && err.status === 404
 }
