@@ -1,10 +1,18 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { adminListApplicationsFn } from '../../../server/api/admin/applications'
 import { Card } from '../../../components/ui/card'
+import { GenericError } from '@/components/error/GenericError'
 
 export const Route = createFileRoute('/admin/applications/')({
   loader: async () => adminListApplicationsFn({ data: {} }),
   component: AdminApplicationsList,
+  errorComponent: ({ error: _error }) => {
+        return (
+          <GenericError
+            backTo={{ to: '/admin', label: 'Back to admin' }}
+          />
+        )
+      },
 })
 
 function AdminApplicationsList() {

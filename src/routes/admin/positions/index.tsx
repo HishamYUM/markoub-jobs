@@ -10,10 +10,18 @@ import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
 import { getErrorCode, toUserMessage } from '../../../lib/appErrors'
 import { capitalize } from '@/lib/utils'
+import { GenericError } from '@/components/error/GenericError'
 
 export const Route = createFileRoute('/admin/positions/')({
   loader: async () => adminListPositionsFn(),
   component: AdminPositionsList,
+  errorComponent: ({ error: _error }) => {
+    return (
+      <GenericError
+        backTo={{ to: '/admin', label: 'Back to admin' }}
+      />
+    )
+  },
 })
 
 function AdminPositionsList() {

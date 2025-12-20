@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import { notFound } from '@tanstack/react-router' // Import the utility
 import { z } from 'zod'
 import {
   adminGetApplicationById,
@@ -22,6 +23,6 @@ export const adminGetApplicationFn = createServerFn({ method: 'GET' })
   .inputValidator(idSchema)
   .handler(async ({ data }) => {
     const app = await adminGetApplicationById(data.id)
-    if (!app) throw new Error('APPLICATION_NOT_FOUND')
+    if (!app) throw notFound()
     return app
   })

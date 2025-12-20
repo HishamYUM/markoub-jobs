@@ -1,8 +1,12 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Card } from '../../components/ui/card'
+import { GenericError } from '@/components/error/GenericError'
 
 export const Route = createFileRoute('/admin/')({
   component: AdminHome,
+  errorComponent: ({ error: _error }) => {
+    return <GenericError backTo={{ to: '/', label: 'Back to home' }} />
+  },
 })
 
 function AdminHome() {

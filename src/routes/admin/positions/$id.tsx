@@ -18,12 +18,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { GenericError } from '@/components/error/GenericError'
+import { ResourceNotFound } from '@/components/error/ResourceNotFound'
 
 type WorkMode = 'remote' | 'hybrid' | 'onsite'
 
 export const Route = createFileRoute('/admin/positions/$id')({
   loader: async ({ params }) => adminGetPositionFn({ data: { id: params.id } }),
   component: EditPositionPage,
+    errorComponent: ({ error: _error }) => {
+      return (
+        <GenericError
+          backTo={{ to: '/admin/positions', label: 'Back to positions' }}
+        />
+      )
+    },
+    notFoundComponent: () => (
+      <ResourceNotFound
+        title="Position not found"
+        backTo={{ to: '/admin/positions', label: 'Back to positions' }}
+        primaryAction={{ to: '/admin', label: 'Admin home' }}
+      />
+    ),
 })
 
 function EditPositionPage() {

@@ -3,12 +3,27 @@ import { ArrowDownToLine, ArrowLeft } from 'lucide-react'
 import { adminGetApplicationFn } from '../../../server/api/admin/applications'
 import { Button } from '../../../components/ui/button'
 import { Card } from '../../../components/ui/card'
-
+import { ResourceNotFound } from '@/components/error/ResourceNotFound'
+import { GenericError } from '@/components/error/GenericError'
 
 export const Route = createFileRoute('/admin/applications/$id')({
   loader: async ({ params }) =>
     adminGetApplicationFn({ data: { id: params.id } }),
   component: ApplicationDetailPage,
+  errorComponent: ({ error: _error }) => {
+    return (
+      <GenericError
+        backTo={{ to: '/admin/applications', label: 'Back to applications' }}
+      />
+    )
+  },
+  notFoundComponent: () => (
+    <ResourceNotFound
+      title="Application not found"
+      backTo={{ to: '/admin/applications', label: 'Back to applications' }}
+      primaryAction={{ to: '/admin', label: 'Admin home' }}
+    />
+  ),
 })
 
 function ApplicationDetailPage() {
@@ -24,7 +39,8 @@ function ApplicationDetailPage() {
             to="/admin/applications"
             className="text-sm text-neutral-600 hover:underline"
           >
-            <ArrowLeft size={16} className="inline-block mr-1" /> Back to applications
+            <ArrowLeft size={16} className="inline-block mr-1" /> Back to
+            applications
           </Link>
         </div>
 

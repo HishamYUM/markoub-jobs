@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { notFound } from '@tanstack/react-router'
 import {
   adminCreatePosition,
   adminDeletePosition,
@@ -24,7 +25,6 @@ const updateSchema = idSchema.merge(positionPayloadSchema)
 const setActiveSchema = idSchema.merge(z.object({ isActive: z.boolean() }))
 const deleteSchema = idSchema
 
-
 export const adminListPositionsFn = createServerFn({ method: 'GET' }).handler(
   async () => {
     return adminListPositions()
@@ -35,7 +35,8 @@ export const adminGetPositionFn = createServerFn({ method: 'GET' })
   .inputValidator(idSchema)
   .handler(async ({ data }) => {
     const p = await adminGetPositionById(data.id)
-    if (!p) throw new Error('POSITION_NOT_FOUND')
+    if (!p) throw notFound()
+
     return p
   })
 
