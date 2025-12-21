@@ -40,7 +40,7 @@ function OpenPositionsPage() {
   async function onSpontaneousSubmit(fd: FormData) {
     setSubmitting(true)
     try {
-      // Do NOT set positionId here
+
       await submitApplicationFn({ data: fd })
       toast.success('Application sent successfully')
       await navigate({ to: '/application-success' })
